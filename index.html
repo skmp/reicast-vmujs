@@ -140,6 +140,7 @@ body {
 <script src="vmu.js"></script>
 
 <script>
+
 function imagesSelected(myFiles) {
   if (myFiles.length != 1)
     alert("Please drop a single file");
@@ -147,7 +148,6 @@ function imagesSelected(myFiles) {
     var vmufile = myFiles[0];
     
     $('#thumbs').empty();
-     
      
     parseVMU(vmufile, function(vmu) {
         $('#thumbs').append(['<span >', vmufile.name, '<div>id <span class="vmu_hash"></span></div></span><br />','<canvas class="vmu_image" ></canvas>'].join(''));
@@ -160,7 +160,39 @@ function imagesSelected(myFiles) {
         
         for (var i=0; i<vmu.files.length; i++) {
           var file=vmu.files[i];
-          $('#res').append($("<div>").text(file.name).attr("title", JSON.stringify(file)));
+          var item = $("<div>");
+          
+          item.appendTo("#res");
+
+          if (file.vms.eyecatch)
+            renderIcon(file.vms.eyecatch, 2).appendTo(item);
+
+          $("<div>").text(file.name).appendTo(item);
+
+          for (var ic = 0; ic < file.vms.icons.length; ic ++ ) {
+            renderIcon(file.vms.icons[ic], 2).appendTo(item);
+          }
+
+          $("<div>").text("animation fps: " + file.vms.iconAnimationSpeed).appendTo(item);
+
+          $("<div>").text("timestamp: " + file.timestamp).appendTo(item);
+
+          $("<div>").text("size: " + file.size).appendTo(item);
+
+          $("<div>").text("desc: " + file.vms.description).appendTo(item);
+          
+          $("<div>").text("short desc: " + file.vms.shortDescription).appendTo(item);
+          
+          $("<div>").text("created by: " + file.vms.createdBy).appendTo(item);
+
+          $("<div>").text("created by (full): " + file.vms.createdByFull).appendTo(item);
+
+          $("<div>").text("crc: " + file.vms.crc).appendTo(item);
+
+          $("<div>").text("payload size: " + file.vms.payloadSize).appendTo(item);
+          
+          if (vmu.files.length != (i+1))
+            $("<hr>").appendTo(item);
         }
     });
       
