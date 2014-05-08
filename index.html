@@ -115,6 +115,10 @@ body {
   margin: auto;
 }
 
+.animate {
+  display: block;
+  margin: auto;
+}
 </style>
 <div class="drop" ondragenter="return false" ondragover="return false" ondrop="dropIt(event)">
     <div id="thumbs"></div>
@@ -140,6 +144,31 @@ body {
 <script src="vmu.js"></script>
 
 <script>
+var frameCount = 0;
+
+setInterval(function() {
+  var anims = $(".animate");
+
+  anims.each(function(k, v) {
+    $v = $(v);
+    var frames = $v.data("frames") || 1;
+    var skip = $v.data("skip") || 1;
+
+    var frame = ((frameCount/skip) | 0) % frames;
+
+    if (frame != $v.data("frame")) {
+      $v.data("frame", frame);
+      //grab the context from your destination canvas
+      var destCtx = v.getContext('2d');
+
+      //call its drawImage() function passing it the source canvas directly
+      destCtx.drawImage($v.parent().find(".frame-" + frame)[0], 0, 0);
+    }
+  });
+
+  frameCount++;
+
+}, 1000/60);
 
 function imagesSelected(myFiles) {
   if (myFiles.length != 1)
@@ -148,7 +177,7 @@ function imagesSelected(myFiles) {
     var vmufile = myFiles[0];
     
     $('#thumbs').empty();
-     
+
     parseVMU(vmufile, function(vmu) {
         $('#thumbs').append(['<span >', vmufile.name, '<div>id <span class="vmu_hash"></span></div></span><br />','<canvas class="vmu_image" ></canvas>'].join(''));
         $("#res").empty();
@@ -170,8 +199,13 @@ function imagesSelected(myFiles) {
           $("<div>").text(file.name).appendTo(item);
 
           for (var ic = 0; ic < file.vms.icons.length; ic ++ ) {
-            renderIcon(file.vms.icons[ic], 2).appendTo(item);
+            renderIcon(file.vms.icons[ic], 2).addClass("frame-" + ic).appendTo(item);
           }
+
+          if (file.vms.icons.length > 1) {
+            var animation = renderIcon(file.vms.icons[0], 2).addClass("animate").data({ frames: file.vms.icons.length, skip: file.vms.iconAnimationSpeed }).appendTo(item);
+          }
+
 
           $("<div>").text("animation fps: " + file.vms.iconAnimationSpeed).appendTo(item);
 
