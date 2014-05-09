@@ -184,13 +184,16 @@ setInterval(function() {
 $('.url-form').submit(function(e) {
   
   e.preventDefault();
+  getVMU($('#url').val());
+});
 
+function getVMU(url) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', $('#url').val(), true);
+  xhr.open('GET', url, true);
   xhr.responseType = 'arraybuffer';
 
   xhr.onload = function(e) {
-    displayVMU(this.response);
+    displayVMU(this.response, url);
   };
 
   xhr.onerror = xhr.onabort = function(e) {
@@ -198,15 +201,22 @@ $('.url-form').submit(function(e) {
   }
 
   xhr.send();
-});
+}
 
-function displayVMU(vmufile) {
+function displayVMU(vmufile, url) {
   $('#thumbs').empty();
 
   parseVMU(vmufile, function(vmu) {
+    
+    window.location.hash = "";
+    
     if (!vmu) {
       alert("Something went wrong. Try another file perhaps?")
       return false;
+    }
+
+    if (url) {
+      window.location.hash = '#?u=' + encodeURIComponent(url);
     }
 
     $('#thumbs').append(['<span >', vmufile.name, '<div>id <span class="vmu_hash"></span></div></span><br />','<canvas class="vmu_image" ></canvas>'].join(''));
@@ -270,6 +280,12 @@ function dropIt(e) {
    e.stopPropagation();
    e.preventDefault();
    imagesSelected(e.dataTransfer.files);
+}
+
+if (window.location.hash) {
+  var url = decodeURIComponent(window.location.hash.split("#?u=")[1]);
+  if(url)
+    getVMU(url)
 }
 </script>
 
