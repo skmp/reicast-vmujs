@@ -223,16 +223,16 @@ function displayVMU(vmufile) {
       item.appendTo("#res");
 
       if (file.vms.eyecatch)
-        renderIcon(file.vms.eyecatch, 2).appendTo(item);
+        file.vms.eyecatch.toCanvas(2).appendTo(item);
 
       $("<div>").text(file.vms.description).appendTo(item);
 
       for (var ic = 0; ic < file.vms.icons.length; ic ++ ) {
-        renderIcon(file.vms.icons[ic], 2).addClass("frame frame-" + ic).appendTo(item);
+        file.vms.icons[ic].toCanvas(2).addClass("frame frame-" + ic).appendTo(item);
       }
 
       if (file.vms.icons.length) {
-        var animation = renderIcon(file.vms.icons[0], 2).addClass("animate").data({ frames: file.vms.icons.length, skip: file.vms.iconAnimationSpeed }).appendTo(item);
+        var animation = file.vms.icons[0].toCanvas(2).addClass("animate").data({ frames: file.vms.icons.length, skip: file.vms.iconAnimationSpeed }).appendTo(item);
       }
 
 
