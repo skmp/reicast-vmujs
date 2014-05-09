@@ -123,6 +123,12 @@ body {
   display: block;
   margin: auto;
 }
+
+.host {
+  font-size: 0.4em !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 </style>
 <div class="drop" ondragenter="return false" ondragover="return false" ondrop="dropIt(event)">
     <div id="thumbs"></div>
@@ -206,6 +212,14 @@ function getVMU(url) {
 function displayVMU(vmufile, url) {
   $('#thumbs').empty();
 
+  var filename = vmufile.name;
+  
+  if (url) {
+    var path = url.split("//")[1] || url || "";
+    var filename = path.split("/").slice(-1)[0];
+    var host = path.split("/")[0];
+  }
+  
   parseVMU(vmufile, function(vmu) {
     
     window.location.hash = "";
@@ -215,11 +229,17 @@ function displayVMU(vmufile, url) {
       return false;
     }
 
+    
+    host = host && ('<div class="host">(from ' + host + ')</div>');
+
+    $('#thumbs').append(['<span >', '<span class="filename">', filename, '</span>', host, '<div>id <span class="vmu_hash"></span></div></span><br />','<canvas class="vmu_image" ></canvas>'].join(''));
+
     if (url) {
       window.location.hash = '#?u=' + encodeURIComponent(url);
+      $('.filename').wrap('<a href="' + url + '">');
     }
-
-    $('#thumbs').append(['<span >', vmufile.name, '<div>id <span class="vmu_hash"></span></div></span><br />','<canvas class="vmu_image" ></canvas>'].join(''));
+        
+    
     $("#res").empty();
 
     $(".vmu_hash").text("#" + vmu.hash);
