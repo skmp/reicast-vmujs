@@ -215,6 +215,6 @@
       return rv;
   }
   
-  exports.shiftjisToString = function (array) { return decoderDBCSWrite(array); }
+  exports.shiftjisToString = function (array) { that.leadBytes = -1; return decoderDBCSWrite(array); }
 
 })(window);

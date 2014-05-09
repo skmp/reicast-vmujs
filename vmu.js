@@ -203,13 +203,17 @@ function parseFile(vmu, bits) {
 }
 
 function parseVMU(file, callback) {
-    var reader = new FileReader();
 
-    // Closure to capture the file information.
-    reader.onload = 
+    var parse = 
     function(e) {
+      
+      if (e.byteLength != 128*1024) {
+        callback(false);
+        return;
+      }
+
       var vmu = {}
-      var bits = vmu.bits = new Uint8Array(e.target.result);
+      var bits = vmu.bits = new Uint8Array(e);
       
       vmu.fat = getBlock(bits, 254);
 
@@ -237,8 +241,17 @@ function parseVMU(file, callback) {
       callback(vmu);
     };
 
-    // Read in the image file as a data URL.
-    reader.readAsArrayBuffer(file)
+    if (file instanceof File) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) { parse(e.target.result)}
+      // Read in the image file as a data URL.
+      reader.readAsArrayBuffer(file)
+    } else if (file instanceof ArrayBuffer) {
+      parse(file);
+    } else {
+      callback(false);
+    }
 }
 
 function renderIcon(icon, mag, canvas) {
