@@ -20,21 +20,21 @@ function readBCDDate(bits, offs) {
 }
 
 function readText(bits, offs, count) {
-  var rv = "";
+  var rv = [];
 
   for (var k = 0; k< count; k++) 
-    rv += String.fromCharCode(bits[offs + k]);
+    rv.push(bits[offs + k]);
 
-  return rv;
+  return shiftjisToString(rv).trim();
 }
 
 function readString(bits, offs, count) {
-  var rv = "";
+  var rv = [];
 
-  for (var k = 0; k< count && bits[offs + k]; k++) 
-    rv += String.fromCharCode(bits[offs + k]);
+  for (var k = 0; k< count && (bits[offs + k] || bits[offs + k+1]); k++) 
+    rv.push(bits[offs + k]);
 
-  return rv;
+  return shiftjisToString(rv).trim();
 }
 
 function getBlock(bits, block, count) {
@@ -83,7 +83,7 @@ function parseVMS(file) {
   vms.description = readText(bits, 0x10, 32);
 
   vms.createdBy = readString(bits, 0x30, 32);
-  vms.createdByFull = readText(bits, 0x30, 32);
+  //vms.createdByFull = readText(bits, 0x30, 32);
 
   vms.iconCount = read16(bits, 0x40);
   vms.iconAnimationSpeed = read16(bits, 0x42);

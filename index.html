@@ -140,6 +140,7 @@ body {
 	
 
 <script src="jquery-1.10.2.js"></script>
+<script src="shiftjis-to-utf8.js" charset="UTF-8"></script>
 <script src="sha1.js"></script>
 <script src="vmu.js"></script>
 
@@ -216,10 +217,12 @@ function imagesSelected(myFiles) {
           $("<div>").text("desc: " + file.vms.description).appendTo(item);
           
           $("<div>").text("short desc: " + file.vms.shortDescription).appendTo(item);
-          
-          $("<div>").text("created by: " + file.vms.createdBy).appendTo(item);
 
+          file.vms.createdBy && $("<div>").text("created by: " + file.vms.createdBy).appendTo(item);
+          
+/*        
           $("<div>").text("created by (full): " + file.vms.createdByFull).appendTo(item);
+*/
 
           $("<div>").text("crc: " + file.vms.crc).appendTo(item);
 
