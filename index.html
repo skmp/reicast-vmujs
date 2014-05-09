@@ -256,7 +256,7 @@ function displayVMU(vmufile, url) {
       
       $("<div>").text(file.name + " / " + file.timestamp.slice(0, -2)).appendTo(item);
 
-      $("<div>").text("size: " + file.size + " / crc: " + file.vms.crc.toString(16) + " payload: " + file.vms.payloadSize).appendTo(item);
+      $("<div>").text("size: " + file.size + " / crc: " + file.vms.crc.toString(16) + " / payload: " + file.vms.payloadSize).appendTo(item);
 /*        
       $("<div>").text("created by (full): " + file.vms.createdByFull).appendTo(item);
 */
